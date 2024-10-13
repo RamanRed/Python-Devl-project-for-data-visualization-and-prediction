@@ -1,103 +1,139 @@
 import tkinter
 import pandas as pd
 import os
-import matplotlib as plt
+import matplotlib.pyplot as plt  # Corrected the import statement
 import seaborn as sns
 from tkinter import messagebox 
-data = pd.read_csv("movies.csv")
-# print(data.head())
-colunm_name = data.columns
-print(len(colunm_name))
 
-def box_plot(dataset,xcol1, ycol2, hueDefault ):
-    messagebox.showinfo(title="default", message="genre is set as by default hue parameter")
-    plt.ylabel(f'{ycol2}', fontsize=12, color='green')
-    plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-    x=dataset[xcol1].unique()
-    y=dataset[ycol2].unique()
-    plt.figure(figsize=(x/2, y/2))
-    sns.boxplot(data=dataset, x= xcol1, y= ycol2, hue=hueDefault)
-    plt.show()
-    
-def scatter_plot(dataset,xcol1, ycol2, hueDefault ):
-    plt.ylabel(f'{ycol2}', fontsize=12, color='green')
-    plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-    x=dataset[xcol1].unique()
-    y=dataset[ycol2].unique()
-    plt.figure(figsize=(x/2, y/2))
-    sns.scatterplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
-    plt.show()     
-    
+# Load the dataset with exception handling
+try:
+    data = pd.read_csv("movies.csv")
+except FileNotFoundError:
+    print("Error: 'movies.csv' file not found. Please check the file path.")
+    exit()
+except pd.errors.EmptyDataError:
+    print("Error: No data found in 'movies.csv'.")
+    exit()
+except pd.errors.ParserError:
+    print("Error: Parsing 'movies.csv' failed. Please check the file format.")
+    exit()
+
+# Print the number of columns
+column_name = data.columns
+print(len(column_name))
+
+def box_plot(dataset, xcol1, ycol2, hueDefault):
+    try:
+        messagebox.showinfo(title="Default", message="Genre is set as the default hue parameter")
+        plt.ylabel(f'{ycol2}', fontsize=12, color='green')
+        plt.xlabel(f'{xcol1}', fontsize=12, color='green')
+        x = dataset[xcol1].unique()
+        y = dataset[ycol2].unique()
+        plt.figure(figsize=(len(x)/2, len(y)/2))  # Fixed figure size logic
+        sns.boxplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in box_plot: {e}")
+
+def scatter_plot(dataset, xcol1, ycol2, hueDefault):
+    try:
+        plt.ylabel(f'{ycol2}', fontsize=12, color='green')
+        plt.xlabel(f'{xcol1}', fontsize=12, color='green')
+        plt.figure(figsize=(10, 6))  # Fixed figure size
+        sns.scatterplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in scatter_plot: {e}")
+
 def bar_plot(dataset, xcol1, ycol2, hueDefault):
-    plt.ylabel(f'{ycol2}', fontsize=12, color='green')
-    plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-    x=dataset[xcol1].unique()
-    y=dataset[ycol2].unique()
-    plt.figure(figsize=(x/2, y/2))
-    sns.barplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
-    plt.show()         
-    
+    try:
+        plt.ylabel(f'{ycol2}', fontsize=12, color='green')
+        plt.xlabel(f'{xcol1}', fontsize=12, color='green')
+        plt.figure(figsize=(10, 6))  # Fixed figure size
+        sns.barplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in bar_plot: {e}")
+
 def swarm_plot(dataset, xcol1, ycol2, hueDefault):
-    plt.ylabel(f'{ycol2}', fontsize=12, color='green')
-    plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-    x=dataset[xcol1].unique()
-    y=dataset[ycol2].unique()
-    plt.figure(figsize=(x/2, y/2))
-    sns.swarmplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault )
-    plt.show()    
-    
+    try:
+        plt.ylabel(f'{ycol2}', fontsize=12, color='green')
+        plt.xlabel(f'{xcol1}', fontsize=12, color='green')
+        plt.figure(figsize=(10, 6))  # Fixed figure size
+        sns.swarmplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in swarm_plot: {e}")
+
 def strip_plot(dataset, xcol1, ycol2, hueDefault):
-    plt.ylabel(f'{ycol2}', fontsize=12, color='green')
-    plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-    x=dataset[xcol1].unique()
-    y=dataset[ycol2].unique()
-    plt.figure(figsize=(x/2, y/2))
-    sns.stripplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
-    plt.show()
-    
+    try:
+        plt.ylabel(f'{ycol2}', fontsize=12, color='green')
+        plt.xlabel(f'{xcol1}', fontsize=12, color='green')
+        plt.figure(figsize=(10, 6))  # Fixed figure size
+        sns.stripplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in strip_plot: {e}")
+
 def violin_plot(dataset, xcol1, ycol2, hueDefault):
-    plt.ylabel(f'{ycol2}', fontsize=12, color='green')
-    plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-    x=dataset[xcol1].unique()
-    y=dataset[ycol2].unique()
-    plt.figure(figsize=(x/2, y/2))
-    sns.catplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault, kind="violin")
-    plt.show()        
-    
+    try:
+        plt.ylabel(f'{ycol2}', fontsize=12, color='green')
+        plt.xlabel(f'{xcol1}', fontsize=12, color='green')
+        plt.figure(figsize=(10, 6))  # Fixed figure size
+        sns.violinplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in violin_plot: {e}")
+
 def count_plot_uni(dataset, col):
-    sns.countplot(data=dataset, x=col)
-    plt.title(f"count plot : {col}")
-    plt.xlabel(col)
-    plt.ylabel("count")
-    plt.show()
-    
+    try:
+        sns.countplot(data=dataset, x=col)
+        plt.title(f"Count plot: {col}")
+        plt.xlabel(col)
+        plt.ylabel("Count")
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in count_plot_uni: {e}")
+
 def bar_plot_uni(dataset, col):
-    sns.barplot(data=dataset, x=col)
-    plt.title(f"bar plot : {col}")
-    plt.xlabel(col)
-    plt.ylabel("count")
-    plt.show()
-    
+    try:
+        sns.barplot(data=dataset, x=col)
+        plt.title(f"Bar plot: {col}")
+        plt.xlabel(col)
+        plt.ylabel("Count")
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in bar_plot_uni: {e}")
+
 def violin_plot_uni(dataset, col):
-    sns.violinplot(data=dataset, x=col)
-    plt.title(f"violin plot : {col}")
-    plt.xlabel(col)
-    plt.show()
-    
+    try:
+        sns.violinplot(data=dataset, x=col)
+        plt.title(f"Violin plot: {col}")
+        plt.xlabel(col)
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in violin_plot_uni: {e}")
+
 def histogram_uni(dataset, col):
-    sns.histplot(data=dataset, x=col)
-    plt.title(f"Hist plot : {col}")
-    plt.xlabel(col)
-    plt.ylabel("Frequency")
-    plt.show()
-    
+    try:
+        sns.histplot(data=dataset, x=col)
+        plt.title(f"Hist plot: {col}")
+        plt.xlabel(col)
+        plt.ylabel("Frequency")
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in histogram_uni: {e}")
+
 def pie_uni(dataset, col):
-    size=dataset[col].values_count()
-    label=dataset[col].unique()
-    plt.pie(x=size, labels=label,startangle=0, autopct="%1.1f%%")
-    plt.title(f"{col}")
-    plt.show()    
-    
+    try:
+        size = dataset[col].value_counts()  # Corrected method call
+        labels = dataset[col].unique()
+        plt.pie(x=size, labels=labels, startangle=0, autopct="%1.1f%%")
+        plt.title(f"{col}")
+        plt.show()
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred in pie_uni: {e}")
+
 def bi_analysis(dataset):
     while True:
         print("\nMenu:")
@@ -166,38 +202,73 @@ def uni_analysis(dataset):
             print("Invalid choice, please select a valid option.")    
 
 def choose_analysis(data):
-    print("\nEnter 1. to do Univariate graph Plotting \nEnter 2. to do Bivariate graph Plotting:")
-    choice = int(input())
-    if(choice == 1):
-        uni_analysis(data)
-    else:
-        bi_analysis(data)
+    try:
+        print("\nEnter 1. to do Univariate graph Plotting \nEnter 2. to do Bivariate graph Plotting:")
+        choice = int(input())
+        if choice == 1:
+            uni_analysis(data)
+        elif choice == 2:
+            bi_analysis(data)
+        else:
+            print("Invalid choice. Please enter either 1 or 2.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
 
 def cleaning_dataset(data):
-    """Here your are passing the dataset which you want to analysis"""
-    dataset=data
+    """Here you are passing the dataset which you want to analyze."""
+    dataset = data
     dataset.info()
-    print("\nEnter 1. to remove null \nEnter 2. to replace Na values \nEnter 3. to use upto certain quarters of data \nEnter 4. to drop Duplicates \nEnter 5. to check for Duplicates, Na values \nEnter 6. to Exit \n")
-    choice = int(input())
-    col_name= input("Enter the name to column:")
-    if(choice==1):
-        dataset.drop_na()
-    elif(choice == 2):
-        print("do you want to replace it with certain value \nEnter Yes or No")
-        choice2 = input().capitalize()
-        if(choice2 == "Yes"):
-            value=input("Enter the value:")
-        else:
-            print("Enter 1 to replace with mean \nEnter 2 to replace with median \nEnter 3 to replace with mode \n")
-            choice3=int(input())
-            if(choice3 ==1):
-                    value=data[colunm_name].mean() 
-            elif(choice3 ==2):
-                    value=data[colunm_name].meadian() 
-            elif(choice3 ==3):
-                    value=data[colunm_name].mode()[0] 
-        dataset.fillna(value, inplace=True)    
-        choose_analysis(dataset)
+    print("\nEnter 1. to remove null \nEnter 2. to replace Na values \nEnter 3. to use up to certain quarters of data \nEnter 4. to drop duplicates \nEnter 5. to check for duplicates, Na values \nEnter 6. to exit \n")
     
+    while True:
+        choice = int(input("Enter your choice: "))
+        if choice == 6:
+            break
         
+        col_name = input("Enter the name of the column: ")
+        reference_data_in_use = dataset.copy()  # Create a copy of the dataset
+
+        if choice == 1:
+            reference_data_in_use.dropna(inplace=True)
         
+        elif choice == 2:
+            print("Do you want to replace it with a certain value? \nEnter Yes or No")
+            choice2 = input().capitalize()
+            if choice2 == "Yes":
+                value = input("Enter the value: ")
+            else:
+                print("Enter 1 to replace with mean \nEnter 2 to replace with median \nEnter 3 to replace with mode \n")
+                choice3 = int(input())
+                if choice3 == 1:
+                    value = reference_data_in_use[col_name].mean() 
+                elif choice3 == 2:
+                    value = reference_data_in_use[col_name].median()  # Corrected 'meadian' to 'median'
+                elif choice3 == 3:
+                    value = reference_data_in_use[col_name].mode()[0]
+                else:
+                    print("Invalid choice for replacing Na values.")
+                    continue
+            
+            reference_data_in_use[col_name].fillna(value, inplace=True)  # Fixed inplace operation
+        
+        elif choice == 3:
+            print("Enter the number of rows you want to use:")
+            row_num1 = int(input("Enter start: "))
+            row_num2 = int(input("Enter end: "))
+            reference_data_in_use = reference_data_in_use.loc[row_num1: row_num2]
+        
+        elif choice == 4:
+            reference_data_in_use.drop_duplicates(inplace=True)  # Fixed 'drop_duplicate' to 'drop_duplicates'
+        
+        elif choice == 5:
+            duplicates = reference_data_in_use.duplicated()
+            print("Duplicate Rows:\n", reference_data_in_use[duplicates])
+            print(f"\nNumber of duplicate rows: {duplicates.sum()}")
+            nan_count = reference_data_in_use.isna().sum()
+            print("\nNumber of NaN values in each column:\n", nan_count)
+        
+        else:
+            print("Invalid choice. Please try again.")
+            continue
+        
+        choose_analysis(reference_data_in_use)
