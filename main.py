@@ -230,7 +230,7 @@ def cleaning_dataset(data):
             break
         
         col_name = input("Enter the name of the column: ")
-        reference_data_in_use = dataset.copy()  # Create a copy of the dataset
+        reference_data_in_use = dataset.copy()  
 
         if choice == 1:
             reference_data_in_use.dropna(inplace=True)
@@ -246,14 +246,14 @@ def cleaning_dataset(data):
                 if choice3 == 1:
                     value = reference_data_in_use[col_name].mean() 
                 elif choice3 == 2:
-                    value = reference_data_in_use[col_name].median()  # Corrected 'meadian' to 'median'
+                    value = reference_data_in_use[col_name].median() 
                 elif choice3 == 3:
                     value = reference_data_in_use[col_name].mode()[0]
                 else:
                     print("Invalid choice for replacing Na values.")
                     continue
             
-            reference_data_in_use[col_name].fillna(value, inplace=True)  # Fixed inplace operation
+            reference_data_in_use[col_name].fillna(value, inplace=True)  
         
         elif choice == 3:
             print("Enter the number of rows you want to use:")
@@ -262,7 +262,7 @@ def cleaning_dataset(data):
             reference_data_in_use = reference_data_in_use.loc[row_num1: row_num2]
         
         elif choice == 4:
-            reference_data_in_use.drop_duplicates(inplace=True)  # Fixed 'drop_duplicate' to 'drop_duplicates'
+            reference_data_in_use.drop_duplicates(inplace=True)  
         
         elif choice == 5:
             duplicates = reference_data_in_use.duplicated()
