@@ -135,6 +135,9 @@ def pie_uni(dataset, col):
         messagebox.showerror("Error", f"An error occurred in pie_uni: {e}")
 
 def bi_analysis(dataset):
+    hueDefault="genre"
+    hue_columns = [    "rating",    "genre",    "director",    "writer",    "star",    "country",    "company"]
+
     while True:
         print("\nMenu:")
         print("1. Box Plot")
@@ -147,13 +150,14 @@ def bi_analysis(dataset):
         
         choice = input("Select an option (1-7): ")
 
-        if choice == '7':
+        if choice == '8':
             print("Exiting the program.")
             break
 
         xcol1 = input("Enter the x-axis column name: ")
         ycol2 = input("Enter the y-axis column name: ")
-        hueDefault = input("Enter the hue column name (or press Enter for default): ") or None
+        print(hue_columns)
+        hueDefault = input("\nEnter the hue column name (or press Enter for default): ") or None
         
         if choice == '1':
             box_plot(dataset, xcol1, ycol2, hueDefault)
