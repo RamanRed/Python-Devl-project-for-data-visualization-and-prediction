@@ -164,6 +164,40 @@ def uni_analysis(dataset):
             pie_uni(dataset, col)
         else:
             print("Invalid choice, please select a valid option.")    
+
+def choose_analysis(data):
+    print("\nEnter 1. to do Univariate graph Plotting \nEnter 2. to do Bivariate graph Plotting:")
+    choice = int(input())
+    if(choice == 1):
+        uni_analysis(data)
+    else:
+        bi_analysis(data)
+
+def cleaning_dataset(data):
+    """Here your are passing the dataset which you want to analysis"""
+    dataset=data
+    dataset.info()
+    print("\nEnter 1. to remove null \nEnter 2. to replace Na values \nEnter 3. to use upto certain quarters of data \nEnter 4. to drop Duplicates \nEnter 5. to check for Duplicates, Na values \nEnter 6. to Exit \n")
+    choice = int(input())
+    col_name= input("Enter the name to column:")
+    if(choice==1):
+        dataset.drop_na()
+    elif(choice == 2):
+        print("do you want to replace it with certain value \nEnter Yes or No")
+        choice2 = input().capitalize()
+        if(choice2 == "Yes"):
+            value=input("Enter the value:")
+        else:
+            print("Enter 1 to replace with mean \nEnter 2 to replace with median \nEnter 3 to replace with mode \n")
+            choice3=int(input())
+            if(choice3 ==1):
+                    value=data[colunm_name].mean() 
+            elif(choice3 ==2):
+                    value=data[colunm_name].meadian() 
+            elif(choice3 ==3):
+                    value=data[colunm_name].mode()[0] 
+        dataset.fillna(value, inplace=True)    
+        choose_analysis(dataset)
     
-    
+        
         
