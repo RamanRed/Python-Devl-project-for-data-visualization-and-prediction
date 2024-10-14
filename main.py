@@ -30,7 +30,15 @@ def box_plot(dataset, xcol1, ycol2, hueDefault):
         plt.xlabel(f'{xcol1}', fontsize=12, color='green')
         x = dataset[xcol1].unique()
         y = dataset[ycol2].unique()
-        plt.figure(figsize=(len(x)/2, len(y)/2))  # Fixed figure size logic
+        if len(x) > 20 : 
+            h = 20
+        else :
+            h= len(x)/2
+        if len(y)> 20 :
+            w = 18
+        else :
+            w = len(y)/2            
+        plt.figure(figsize=(h, w))  # Fixed figure size logic
         sns.boxplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
         plt.show()
     except Exception as e:
@@ -40,7 +48,17 @@ def scatter_plot(dataset, xcol1, ycol2, hueDefault):
     try:
         plt.ylabel(f'{ycol2}', fontsize=12, color='green')
         plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-        plt.figure(figsize=(10, 6))  # Fixed figure size
+        x = dataset[xcol1].unique()
+        y = dataset[ycol2].unique()
+        if len(x) > 20 : 
+            h = 20
+        else :
+            h= len(x)/2
+        if len(y)> 20 :
+            w = 18
+        else :
+            w = len(y)/2            
+        plt.figure(figsize=(h, w))  # Fixed figure size
         sns.scatterplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
         plt.show()
     except Exception as e:
@@ -50,7 +68,17 @@ def bar_plot(dataset, xcol1, ycol2, hueDefault):
     try:
         plt.ylabel(f'{ycol2}', fontsize=12, color='green')
         plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-        plt.figure(figsize=(10, 6))  # Fixed figure size
+        x = dataset[xcol1].unique()
+        y = dataset[ycol2].unique()
+        if len(x) > 20 : 
+            h = 20
+        else :
+            h= len(x)/2
+        if len(y)> 20 :
+            w = 18
+        else :
+            w = len(y)/2            
+        plt.figure(figsize=(h, w))
         sns.barplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
         plt.show()
     except Exception as e:
@@ -60,7 +88,17 @@ def swarm_plot(dataset, xcol1, ycol2, hueDefault):
     try:
         plt.ylabel(f'{ycol2}', fontsize=12, color='green')
         plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-        plt.figure(figsize=(10, 6))  # Fixed figure size
+        x = dataset[xcol1].unique()
+        y = dataset[ycol2].unique()
+        if len(x) > 20 : 
+            h = 20
+        else :
+            h= len(x)/2
+        if len(y)> 20 :
+            w = 18
+        else :
+            w = len(y)/2            
+        plt.figure(figsize=(h, w))
         sns.swarmplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
         plt.show()
     except Exception as e:
@@ -70,7 +108,17 @@ def strip_plot(dataset, xcol1, ycol2, hueDefault):
     try:
         plt.ylabel(f'{ycol2}', fontsize=12, color='green')
         plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-        plt.figure(figsize=(10, 6))  # Fixed figure size
+        x = dataset[xcol1].unique()
+        y = dataset[ycol2].unique()
+        if len(x) > 20 : 
+            h = 20
+        else :
+            h= len(x)/2
+        if len(y)> 20 :
+            w = 18
+        else :
+            w = len(y)/2            
+        plt.figure(figsize=(h, w))
         sns.stripplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
         plt.show()
     except Exception as e:
@@ -80,7 +128,17 @@ def violin_plot(dataset, xcol1, ycol2, hueDefault):
     try:
         plt.ylabel(f'{ycol2}', fontsize=12, color='green')
         plt.xlabel(f'{xcol1}', fontsize=12, color='green')
-        plt.figure(figsize=(10, 6))  # Fixed figure size
+        x = dataset[xcol1].unique()
+        y = dataset[ycol2].unique()
+        if len(x) > 20 : 
+            h = 20
+        else :
+            h= len(x)/2
+        if len(y)> 20 :
+            w = 18
+        else :
+            w = len(y)/2            
+        plt.figure(figsize=(h, w))
         sns.violinplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
         plt.show()
     except Exception as e:
