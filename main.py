@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt  # Corrected the import statement
 import seaborn as sns
 from tkinter import messagebox 
+from data import bivariate_analysis, bivariate_pairs
 
 # Load the dataset with exception handling
 try:
@@ -24,7 +25,7 @@ print(len(column_name))
 
 def box_plot(dataset, xcol1, ycol2, hueDefault):
     try:
-        messagebox.showinfo(title="Default", message="Genre is set as the default hue parameter")
+        
         plt.ylabel(f'{ycol2}', fontsize=12, color='green')
         plt.xlabel(f'{xcol1}', fontsize=12, color='green')
         x = dataset[xcol1].unique()
@@ -153,9 +154,11 @@ def bi_analysis(dataset):
         if choice == '8':
             print("Exiting the program.")
             break
-
+        
+        print(f"Possible Bivariate Pair's : {bivariate_pairs}")    
         xcol1 = input("Enter the x-axis column name: ")
         ycol2 = input("Enter the y-axis column name: ")
+        messagebox.showinfo(title="Default", message="Genre is set as the default hue parameter")
         print(hue_columns)
         hueDefault = input("\nEnter the hue column name (or press Enter for default): ") or None
         
