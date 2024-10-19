@@ -1,6 +1,6 @@
-import tkinter
+# import tkinter
+# import os
 import pandas as pd
-import os
 import matplotlib.pyplot as plt  # Corrected the import statement
 import seaborn as sns
 from tkinter import messagebox 
