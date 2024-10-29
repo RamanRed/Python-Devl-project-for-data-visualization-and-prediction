@@ -1,6 +1,12 @@
+'''
+for this project we wiil be analysising a data-set of movies and use python libraries to predict number of votes and score on the basis random parameters we will be passing to our model. Before prediction we would also analysis the graph which would make more sense with our data for analysing the correlation ship between columns of score, votes, director.
+Here we will be only using director , votes, genre, score which are at the top to remove clustering of data.
+'''
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 from tkinter import messagebox
 import data as col_data
 # Load the dataset with exception handling
@@ -17,128 +23,185 @@ except pd.errors.ParserError:
     exit()
 
 # Univariate plotting functions
-# Univariate plotting functions with adjusted figure size
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Univariate plotting functions with adjusted figure size for top 20 largest values
+
 def count_plot_uni(dataset, col):
+    
+    # Keep only top 20 categories
+    top_categories = dataset[col].value_counts().nlargest(20)
+    filtered_data = dataset[dataset[col].isin(top_categories.index)]
+    
     try:
-        plt.figure(figsize=(10, 6))  # Adjust figure size
-        if dataset[col].count() < 100 :
-            sns.countplot(data=dataset, x=col)
-            plt.title(f"Count plot: {col}")
-            plt.xlabel(col)
-            plt.ylabel("Count")
-            plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-            plt.tight_layout()  # Ensure everything fits properly
-            plt.show()
-        else :
-            pass
-            # cahnges area needed
-        plt.title(f"Count plot: {col}")
+        plt.figure(figsize=(18, 6))
+        sns.countplot(data=filtered_data, x=col, order=top_categories.index)
+        plt.title(f"Top 20 Count plot: {col}")
         plt.xlabel(col)
         plt.ylabel("Count")
-        plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-        plt.tight_layout()  # Ensure everything fits properly
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.show()
     except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in count_plot_uni: {e}")
+        print(f"An error occurred in count_plot_uni: {e}")
 
 def bar_plot_uni(dataset, col):
-    try:
-        plt.figure(figsize=(10, 6))  # Adjust figure size
-        sns.barplot(data=dataset, x=col)
-        plt.title(f"Bar plot: {col}")
-        plt.xlabel(col)
-        plt.ylabel("Count")
-        plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-        plt.tight_layout()  # Ensure everything fits properly
-        plt.show()
-    except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in bar_plot_uni: {e}")
-
-def violin_plot_uni(dataset, col):
-    try:
-        plt.figure(figsize=(10, 6))  # Adjust figure size
-        sns.violinplot(data=dataset, x=col)
-        plt.title(f"Violin plot: {col}")
-        plt.xlabel(col)
-        plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-        plt.tight_layout()  # Ensure everything fits properly
-        plt.show()
-    except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in violin_plot_uni: {e}")
-
-def histogram_uni(dataset, col):
-    try:
-        plt.figure(figsize=(10, 6))  # Adjust figure size
-        sns.histplot(data=dataset, x=col)
-        plt.title(f"Hist plot: {col}")
-        plt.xlabel(col)
-        plt.ylabel("Frequency")
-        plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-        plt.tight_layout()  # Ensure everything fits properly
-        plt.show()
-    except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in histogram_uni: {e}")
-
-def pie_uni(dataset, col):
-    try:
-        plt.figure(figsize=(8, 8))  # Adjust figure size for pie chart
-        size = dataset[col].value_counts()
-        labels = dataset[col].unique()
-        plt.pie(x=size, labels=labels, startangle=0, autopct="%1.1f%%")
-        plt.title(f"{col}")
-        plt.tight_layout()  # Ensure everything fits properly
-        plt.show()
-    except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in pie_uni: {e}")
-
-# Bivariate plotting functions
-def box_plot(dataset, xcol1, ycol2, hueDefault):
+    # Keep only top 20 categories
+    top_categories = dataset[col].value_counts().nlargest(20)
+    filtered_data = dataset[dataset[col].isin(top_categories.index)]
+    
     try:
         plt.figure(figsize=(10, 6))
-        sns.boxplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        sns.barplot(x=top_categories.index, y=top_categories.values, palette="viridis")
+        plt.title(f"Top 20 Bar plot: {col}")
+        plt.xlabel(col)
+        plt.ylabel("Count")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.show()
     except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in box_plot: {e}")
+        print(f"An error occurred in bar_plot_uni: {e}")
+
+def violin_plot_uni(dataset, col):
+    # Filter top 20 categories
+    top_categories = dataset[col].value_counts().nlargest(20)
+    filtered_data = dataset[dataset[col].isin(top_categories.index)]
+    
+    try:
+        plt.figure(figsize=(10, 6))
+        sns.violinplot(data=filtered_data, x=col, order=top_categories.index)
+        plt.title(f"Top 20 Violin plot: {col}")
+        plt.xlabel(col)
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        plt.show()
+    except Exception as e:
+        print(f"An error occurred in violin_plot_uni: {e}")
+
+def histogram_uni(dataset, col):
+    # Filter top 20 categories
+    top_categories = dataset[col].value_counts().nlargest(20)
+    filtered_data = dataset[dataset[col].isin(top_categories.index)]
+    
+    try:
+        plt.figure(figsize=(10, 6))
+        sns.histplot(data=filtered_data, x=col)
+        plt.title(f"Top 20 Hist plot: {col}")
+        plt.xlabel(col)
+        plt.ylabel("Frequency")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        plt.show()
+    except Exception as e:
+        print(f"An error occurred in histogram_uni: {e}")
+
+def pie_uni(dataset, col):
+    # Filter top 20 categories
+    top_categories = dataset[col].value_counts().nlargest(20)
+    
+    try:
+        plt.figure(figsize=(8, 8))
+        plt.pie(x=top_categories.values, labels=top_categories.index, startangle=90, autopct="%1.1f%%")
+        plt.title(f"Top 20 {col}")
+        plt.tight_layout()
+        plt.show()
+    except Exception as e:
+        print(f"An error occurred in pie_uni: {e}")
+
+# Bivariate plotting functions
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Updated plotting functions to show only the top 10 values
+
+def box_plot(dataset, xcol1, ycol2, hueDefault):
+    try:
+        # Filter to top 10 values in xcol1
+        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        filtered_data = dataset[dataset[xcol1].isin(top_categories)]
+        
+        plt.figure(figsize=(10, 6))
+        sns.boxplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.title(f"Top 10 Box plot: {xcol1} vs {ycol2}")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+        plt.show()
+    except Exception as e:
+        print(f"An error occurred in box_plot: {e}")
 
 def scatter_plot(dataset, xcol1, ycol2, hueDefault):
     try:
+        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        filtered_data = dataset[dataset[xcol1].isin(top_categories)]
+        
         plt.figure(figsize=(10, 6))
-        sns.scatterplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        sns.scatterplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.title(f"Top 10 Scatter plot: {xcol1} vs {ycol2}")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.show()
     except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in scatter_plot: {e}")
+        print(f"An error occurred in scatter_plot: {e}")
 
 def bar_plot(dataset, xcol1, ycol2, hueDefault):
     try:
+        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        filtered_data = dataset[dataset[xcol1].isin(top_categories)]
+        
         plt.figure(figsize=(10, 6))
-        sns.barplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        sns.barplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.title(f"Top 10 Bar plot: {xcol1} vs {ycol2}")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.show()
     except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in bar_plot: {e}")
+        print(f"An error occurred in bar_plot: {e}")
 
 def swarm_plot(dataset, xcol1, ycol2, hueDefault):
     try:
+        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        filtered_data = dataset[dataset[xcol1].isin(top_categories)]
+        
         plt.figure(figsize=(10, 6))
-        sns.swarmplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        sns.swarmplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.title(f"Top 10 Swarm plot: {xcol1} vs {ycol2}")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.show()
     except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in swarm_plot: {e}")
+        print(f"An error occurred in swarm_plot: {e}")
 
 def strip_plot(dataset, xcol1, ycol2, hueDefault):
     try:
+        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        filtered_data = dataset[dataset[xcol1].isin(top_categories)]
+        
         plt.figure(figsize=(10, 6))
-        sns.stripplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        sns.stripplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.title(f"Top 10 Strip plot: {xcol1} vs {ycol2}")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.show()
     except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in strip_plot: {e}")
+        print(f"An error occurred in strip_plot: {e}")
 
 def violin_plot(dataset, xcol1, ycol2, hueDefault):
     try:
+        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        filtered_data = dataset[dataset[xcol1].isin(top_categories)]
+        
         plt.figure(figsize=(10, 6))
-        sns.violinplot(data=dataset, x=xcol1, y=ycol2, hue=hueDefault)
+        sns.violinplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
+        plt.title(f"Top 10 Violin plot: {xcol1} vs {ycol2}")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
         plt.show()
     except Exception as e:
-        messagebox.showerror("Error", f"An error occurred in violin_plot: {e}")
+        print(f"An error occurred in violin_plot: {e}")
+
 
 # Data cleaning function
 def cleaning_dataset(data):
@@ -154,7 +217,7 @@ def cleaning_dataset(data):
         if choice == 6:
             break
         
-        col_name = input("Enter the name of the column: ")
+
         reference_data_in_use = dataset.copy()
 
         if choice == 1:
@@ -162,6 +225,7 @@ def cleaning_dataset(data):
         
         elif choice == 2:
             print("Do you want to replace it with a certain value? \nEnter Yes or No")
+            col_name = input("Enter the name of the column: ")
             choice2 = input().capitalize()
             if choice2 == "Yes":
                 value = input("Enter the value: ")
@@ -258,12 +322,13 @@ def bi_analysis(dataset):
         
         xcol1 = input("Enter the x-axis column name: ")
         ycol2 = input("Enter the y-axis column name: ")
-        messagebox.showinfo(title="Default", message="Genre is set as the default hue parameter")
+        # messagebox.showinfo(title="Default", message="Genre is set as the default hue parameter")
+
         print(hue_columns)
         hueDefault = input("\nEnter the hue column name (or press Enter for default): ")
         if hueDefault == "":
-            hueDefault = "genre"
-        
+            hueDefault = None
+
         if choice == '1':
             box_plot(dataset, xcol1, ycol2, hueDefault)
         elif choice == '2':
