@@ -1,33 +1,32 @@
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import numpy as np
 
-# Load the dataset with exception handling
-try:
-    data = pd.read_csv("10000 Sales Records.csv")
-except FileNotFoundError:
-    print("Error: '10000 Sales Records.csv' file not found. Please check the file path.")
-    exit()
-except pd.errors.EmptyDataError:
-    print("Error: No data found in '10000 Sales Records.csv'.")
-    exit()
-except pd.errors.ParserError:
-    print("Error: Parsing '10000 Sales Records.csv' failed. Please check the file format.")
-    exit()
+data = pd.read_csv("movies.csv")
+print(data)
 
-# Define the column to plot
-col = "Country"
+data.dropna(inplace=True)
+print(data.columns)
 
-# Get the top N categories to reduce clutter
-top_categories = data[col].value_counts().nlargest(10).index  # Show only top 10 categories
-filtered_data = data[data[col].isin(top_categories)]
+x = data.drop(columns=['name', 'rating', 'genre', 'company', 'released', 'director', 'writer', 'star', 'country', 'votes'])
+y= data['votes']
 
-# Plot
-plt.figure(figsize=(10, 6))  # Adjust figure size
-sns.histplot(data=filtered_data, x=col, shrink=0.8, palette="viridis")  # Shrink bars to avoid overlap
-plt.title(f"Histogram of Top 10 {col}")
-plt.xlabel(col)
-plt.ylabel("Frequency")
-plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
-plt.tight_layout()  # Ensure everything fits properly
-plt.show()
+x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.3, random_state=42)
+
+model = LinearRegression()
+model.fit(x_train,y_train)
+
+print(model.intercept_)
+print(model.coef_)
+
+y_pred = model.predict(x_test)
+print(y_pred)
+
+rmse = np.sqrt(mean_squared_error(y_test,y_pred))
+r2 = r2_score(y_test,y_pred)
+
+print(rmse)
+print(r2)
