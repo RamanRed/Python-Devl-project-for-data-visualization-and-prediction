@@ -9,6 +9,12 @@ import seaborn as sns
 import numpy as np
 from tkinter import messagebox
 import data as col_data
+from scipy import stats
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import joblib
 # Load the dataset with exception handling
 try:
     data = pd.read_csv("movies.csv")
@@ -33,13 +39,13 @@ import pandas as pd
 def count_plot_uni(dataset, col):
     
     # Keep only top 20 categories
-    top_categories = dataset[col].value_counts().nlargest(20)
+    top_categories = dataset[col].value_counts().nlargest(30)
     filtered_data = dataset[dataset[col].isin(top_categories.index)]
     
     try:
         plt.figure(figsize=(18, 6))
         sns.countplot(data=filtered_data, x=col, order=top_categories.index)
-        plt.title(f"Top 20 Count plot: {col}")
+        plt.title(f"Top 30 Count plot: {col}")
         plt.xlabel(col)
         plt.ylabel("Count")
         plt.xticks(rotation=45, ha='right')
@@ -100,14 +106,15 @@ def histogram_uni(dataset, col):
 
 def pie_uni(dataset, col):
     # Filter top 20 categories
-    top_categories = dataset[col].value_counts().nlargest(20)
+    top_categories = dataset[col].value_counts().nlargest(10)
     
     try:
         plt.figure(figsize=(8, 8))
         plt.pie(x=top_categories.values, labels=top_categories.index, startangle=90, autopct="%1.1f%%")
-        plt.title(f"Top 20 {col}")
+        plt.title(f"Top 10 {col}")
         plt.tight_layout()
         plt.show()
+        plt.legend()
     except Exception as e:
         print(f"An error occurred in pie_uni: {e}")
 
@@ -120,12 +127,12 @@ import matplotlib.pyplot as plt
 def box_plot(dataset, xcol1, ycol2, hueDefault):
     try:
         # Filter to top 10 values in xcol1
-        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        top_categories = dataset[xcol1].value_counts().nlargest(20).index
         filtered_data = dataset[dataset[xcol1].isin(top_categories)]
         
         plt.figure(figsize=(10, 6))
         sns.boxplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
-        plt.title(f"Top 10 Box plot: {xcol1} vs {ycol2}")
+        plt.title(f"Top 20 Box plot: {xcol1} vs {ycol2}")
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         plt.show()
@@ -134,12 +141,12 @@ def box_plot(dataset, xcol1, ycol2, hueDefault):
 
 def scatter_plot(dataset, xcol1, ycol2, hueDefault):
     try:
-        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        top_categories = dataset[xcol1].value_counts().nlargest(20).index
         filtered_data = dataset[dataset[xcol1].isin(top_categories)]
         
         plt.figure(figsize=(10, 6))
         sns.scatterplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
-        plt.title(f"Top 10 Scatter plot: {xcol1} vs {ycol2}")
+        plt.title(f"Top 20 Scatter plot: {xcol1} vs {ycol2}")
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         plt.show()
@@ -148,12 +155,12 @@ def scatter_plot(dataset, xcol1, ycol2, hueDefault):
 
 def bar_plot(dataset, xcol1, ycol2, hueDefault):
     try:
-        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        top_categories = dataset[xcol1].value_counts().nlargest(20).index
         filtered_data = dataset[dataset[xcol1].isin(top_categories)]
         
         plt.figure(figsize=(10, 6))
         sns.barplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
-        plt.title(f"Top 10 Bar plot: {xcol1} vs {ycol2}")
+        plt.title(f"Top 20 Bar plot: {xcol1} vs {ycol2}")
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         plt.show()
@@ -162,12 +169,12 @@ def bar_plot(dataset, xcol1, ycol2, hueDefault):
 
 def swarm_plot(dataset, xcol1, ycol2, hueDefault):
     try:
-        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        top_categories = dataset[xcol1].value_counts().nlargest(20).index
         filtered_data = dataset[dataset[xcol1].isin(top_categories)]
         
         plt.figure(figsize=(10, 6))
         sns.swarmplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
-        plt.title(f"Top 10 Swarm plot: {xcol1} vs {ycol2}")
+        plt.title(f"Top 20 Swarm plot: {xcol1} vs {ycol2}")
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         plt.show()
@@ -176,12 +183,12 @@ def swarm_plot(dataset, xcol1, ycol2, hueDefault):
 
 def strip_plot(dataset, xcol1, ycol2, hueDefault):
     try:
-        top_categories = dataset[xcol1].value_counts().nlargest(10).index
+        top_categories = dataset[xcol1].value_counts().nlargest(20).index
         filtered_data = dataset[dataset[xcol1].isin(top_categories)]
         
         plt.figure(figsize=(10, 6))
         sns.stripplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault)
-        plt.title(f"Top 10 Strip plot: {xcol1} vs {ycol2}")
+        plt.title(f"Top 20 Strip plot: {xcol1} vs {ycol2}")
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
         plt.show()
@@ -202,6 +209,29 @@ def violin_plot(dataset, xcol1, ycol2, hueDefault):
     except Exception as e:
         print(f"An error occurred in violin_plot: {e}")
 
+def line_plot(dataset, xcol1, ycol2, hueDefault):
+    try:
+        # Get top 20 categories of the xcol1 column
+        top_categories = dataset[xcol1].value_counts().nlargest(20).index
+        
+        # Filter the dataset for only those top categories
+        filtered_data = dataset[dataset[xcol1].isin(top_categories)]
+        
+        # Create a line plot with Seaborn
+        plt.figure(figsize=(10, 6))
+        sns.lineplot(data=filtered_data, x=xcol1, y=ycol2, hue=hueDefault, marker='o')
+        
+        # Set title and rotate x-ticks for better readability
+        plt.title(f"Top 20 Line Plot: {xcol1} vs {ycol2}")
+        plt.xticks(rotation=45, ha='right')
+        
+        # Adjust layout for tight fit
+        plt.tight_layout()
+        
+        # Show the plot
+        plt.show()
+    except Exception as e:
+        print(f"An error occurred in line_plot: {e}")
 
 # Data cleaning function
 def cleaning_dataset(data):
@@ -273,14 +303,13 @@ def uni_analysis(dataset):
         print("\nMenu:")
         print("1. Count Plot")
         print("2. Bar Plot")
-        print("3. Violin Plot")
-        print("4. Histogram")
-        print("5. Pie Chart")
-        print("6. Exit")
+        print("3. Histogram")
+        print("4. Pie Chart")
+        print("5. Exit")
         
         choice = input("Select an option (1-6): ")
 
-        if choice == '6':
+        if choice == '5':
             print("Exiting the program.")
             break
 
@@ -291,10 +320,8 @@ def uni_analysis(dataset):
         elif choice == '2':
             bar_plot_uni(dataset, col)
         elif choice == '3':
-            violin_plot_uni(dataset, col)
-        elif choice == '4':
             histogram_uni(dataset, col)
-        elif choice == '5':
+        elif choice == '4':
             pie_uni(dataset, col)
         else:
             print("Invalid choice, please select a valid option.")    
@@ -312,11 +339,12 @@ def bi_analysis(dataset):
         print("4. Swarm Plot")
         print("5. Strip Plot")
         print("6. Violin Plot")
-        print("7. Exit")
+        print("7. line plot")
+        print("8. Exit")
         
         choice = input("Select an option (1-7): ")
 
-        if choice == '7':
+        if choice == '8':
             print("Exiting the program.")
             break
         
@@ -341,6 +369,8 @@ def bi_analysis(dataset):
             strip_plot(dataset, xcol1, ycol2, hueDefault)
         elif choice == '6':
             violin_plot(dataset, xcol1, ycol2, hueDefault)
+        elif choice == '7':
+            line_plot(dataset, xcol1, ycol2, hueDefault)
         else:
             print("Invalid choice, please select a valid option.")
 
@@ -359,3 +389,58 @@ def choose_analysis(dataset):
 
 # Initial call to clean and analyze the dataset
 cleaning_dataset(data)
+
+# prediction model test and training
+
+# Load the dataset
+df = pd.read_csv('movies.csv')
+
+# Fill missing values with the mean (for numerical columns only)
+# df.fillna(df.mean(), inplace=True)
+df.dropna(inplace=True)
+
+# Detect and remove outliers based on Z-score
+z_scores = np.abs(stats.zscore(df.select_dtypes(include=[np.number])))
+outliers = (z_scores > 3)
+
+# Remove rows where any column has an outlier
+df = df[(z_scores < 3).all(axis=1)]
+
+# Step 1: Prepare your features (X) and target variable (y)
+# Assuming 'gross' is the target variable you want to predict
+# X = df.drop('gross', axis=1)  # Features (remove target column 'gross')
+X= df.drop(columns=['name', 'rating', 'genre', 'company', 'released', 'director', 'writer', 'star', 'country'])
+print(X)
+y = df['gross']  # Target variable (the 'gross' column)
+
+# Step 2: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Step 3: Initialize and train the regression model
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+# Step 4: Make predictions
+y_pred = regressor.predict(X_test)
+
+# Step 5: Evaluate the model
+# Calculate RMSE (Root Mean Squared Error)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+# Calculate R² (Coefficient of Determination)
+r2 = r2_score(y_test, y_pred)
+
+print(f"RMSE: {rmse}")
+print(f"R²: {r2}")
+
+# Step 6: Visualize the predictions vs actual values (for the test set)
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, color='blue', edgecolors='k', alpha=0.7)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
+plt.xlabel('Actual Values')
+plt.ylabel('Predicted Values')
+plt.title('Actual vs Predicted Values')
+plt.show()
+
+# Step 7: Save the model for future use (optional)
+joblib.dump(regressor, 'linear_regression_model.pkl')
