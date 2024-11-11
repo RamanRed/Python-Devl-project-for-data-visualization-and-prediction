@@ -398,18 +398,10 @@ df = pd.read_csv('movies.csv')
 # Fill missing values with the mean (for numerical columns only)
 # df.fillna(df.mean(), inplace=True)
 df.dropna(inplace=True)
-
-# Detect and remove outliers based on Z-score
-z_scores = np.abs(stats.zscore(df.select_dtypes(include=[np.number])))
-outliers = (z_scores > 3)
-
-# Remove rows where any column has an outlier
-df = df[(z_scores < 3).all(axis=1)]
-
 # Step 1: Prepare your features (X) and target variable (y)
 # Assuming 'gross' is the target variable you want to predict
 # X = df.drop('gross', axis=1)  # Features (remove target column 'gross')
-X= df.drop(columns=['name', 'rating', 'genre', 'company', 'released', 'director', 'writer', 'star', 'country'])
+X= df.drop(columns=['name', 'rating', 'genre', 'company', 'released', 'director', 'writer', 'star', 'country','gross'])
 print(X)
 y = df['gross']  # Target variable (the 'gross' column)
 
